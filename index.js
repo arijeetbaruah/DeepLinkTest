@@ -1,9 +1,18 @@
-var http = require('http');
-var fs = require('fs');
-http.createServer(function (req, res) {
-  fs.readFile('index.html', function(err, data) {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(data);
-    return res.end();
-  });
-}).listen(process.env.PORT || 8080);
+const express = require('express');
+const path = require('path');
+
+const app = express();
+const port = process.env.PORT || 8080;
+
+app.listen(port, () => console.log(`Listening on port ${port}`));
+
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+app.get('/express_backend', (req, res) => { //Line 9
+    res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' }); //Line 10
+});
+
+app.get('*', (req, res) => { //Line 9
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+
